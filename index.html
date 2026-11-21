@@ -1,52 +1,89 @@
+
 <!DOCTYPE html>
 <html lang="hi">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#101a35">
 <title>SAKSHAR AI</title>
 <style>
-body {
-  font-family: Arial;
-  background: #101827;
-  color: white;
-  text-align: center;
-  padding: 20px;
-}
-.container {
-  max-width: 500px;
-  margin: auto;
-  background: #1e293b;
-  padding: 20px;
-  border-radius: 15px;
-}
-input {
-  width: 90%;
-  padding: 13px;
-  border-radius: 10px;
-  border: none;
-}
-button {
-  padding: 12px 20px;
-  margin: 10px;
-  background: #2563eb;
-  color: white;
-  border: none;
-  border-radius: 10px;
-}
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:#0b1224;color:white}
+header{padding:18px;background:#111d3b;text-align:center}
+header h1{margin:0;color:#65d5ff}
+header p{color:#c5d3ef}
+main{max-width:750px;margin:auto;padding:15px}
+.welcome{background:linear-gradient(135deg,#183b72,#422b75);padding:20px;border-radius:18px}
+#chat{height:48vh;min-height:300px;overflow-y:auto;padding:12px;background:#111b33;border-radius:15px;margin-top:15px}
+.msg{padding:12px;margin:10px 0;border-radius:14px;max-width:90%;line-height:1.5;white-space:pre-wrap}
+.user{background:#2459a5;margin-left:auto}
+.bot{background:#26334f}
+.controls{display:flex;gap:8px;margin-top:12px}
+input{flex:1;min-width:0;padding:14px;border-radius:12px;background:#172440;color:white;border:1px solid #405277;font-size:16px}
+button{padding:12px 16px;border:0;border-radius:12px;background:#26b8e8;color:#06152a;font-weight:bold}
+.quick{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.quick button{background:#263c62;color:white}
+footer{text-align:center;color:#8ea2c8;padding:18px;font-size:12px}
 </style>
 </head>
 <body>
-<div class="container">
-<h1>🤖 SAKSHAR AI</h1>
-<p>Your Free Study Assistant</p>
-<input id="question" placeholder="अपना सवाल लिखें...">
-<button onclick="ask()">पूछें</button>
-<p id="answer">नमस्ते! मैं SAKSHAR AI हूँ।</p>
+<header>
+<h1>✨ SAKSHAR AI</h1>
+<p>Your Smart Study Assistant</p>
+</header>
+<main>
+<div class="welcome">
+<h2>नमस्ते! मैं SAKSHAR AI हूँ। 👋</h2>
+<p>Maths, Science, SST, English और Hindi के सवाल पूछो।</p>
 </div>
+<div id="chat">
+<div class="msg bot">नमस्ते विद्यार्थी! 😊 आज क्या पढ़ना चाहते हो?</div>
+</div>
+<div class="quick">
+<button onclick="quickAsk('कक्षा 8 विज्ञान के महत्वपूर्ण प्रश्न बताओ')">Science</button>
+<button onclick="quickAsk('गणित के सवाल समझाओ')">Maths</button>
+<button onclick="quickAsk('SST के नोट्स दो')">SST</button>
+<button onclick="quickAsk('English grammar सिखाओ')">English</button>
+</div>
+<div class="controls">
+<input id="question" placeholder="अपना सवाल यहाँ लिखें..." onkeydown="if(event.key==='Enter')sendMessage()">
+<button onclick="sendMessage()">भेजें ➤</button>
+</div>
+</main>
+<footer>SAKSHAR AI · Made with ❤️ by Sakshar Jaiswal</footer>
 <script>
-function ask() {
- document.getElementById("answer").innerText =
- "आपका सवाल मिल गया! असली AI जवाब जोड़ने का काम अभी बाकी है।";
+const chat=document.getElementById("chat");
+const input=document.getElementById("question");
+function addMessage(text,type){
+ const div=document.createElement("div");
+ div.className="msg "+type;
+ div.textContent=text;
+ chat.appendChild(div);
+ chat.scrollTop=chat.scrollHeight;
+}
+function quickAsk(text){input.value=text;sendMessage();}
+function getReply(q){
+ const s=q.toLowerCase();
+ if(s.includes("नमस्ते")||s.includes("hello")||s.includes("hi"))
+ return "नमस्ते दोस्त! 😊 मैं तुम्हारी पढ़ाई में मदद के लिए तैयार हूँ।";
+ if(s.includes("गणित")||s.includes("math"))
+ return "गणित में अच्छा बनने के लिए रोज अभ्यास करो। अपना सवाल या अध्याय लिखो।";
+ if(s.includes("विज्ञान")||s.includes("science"))
+ return "अपना विज्ञान का टॉपिक बताओ। मैं सरल भाषा में समझाने की कोशिश करूँगा।";
+ if(s.includes("इतिहास")||s.includes("sst")||s.includes("सामाजिक"))
+ return "SST के लिए तारीखें और महत्वपूर्ण शब्द याद करो। अपना अध्याय बताओ।";
+ if(s.includes("english")||s.includes("अंग्रेजी"))
+ return "मैं English grammar और writing की प्रैक्टिस में मदद कर सकता हूँ।";
+ if(s.includes("हिंदी"))
+ return "मैं हिंदी व्याकरण, निबंध और पत्र लेखन में मदद कर सकता हूँ।";
+ return "तुम्हारा सवाल मिल गया! 😊 यह शुरुआती संस्करण है। असली AI जवाब के लिए सुरक्षित AI सेवा जोड़ना बाकी है।";
+}
+function sendMessage(){
+ const q=input.value.trim();
+ if(!q)return;
+ addMessage(q,"user");
+ input.value="";
+ setTimeout(()=>addMessage(getReply(q),"bot"),400);
 }
 </script>
 </body>
