@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SAKSHAR AI</title>
+<style>
+body {
+  font-family: Arial;
+  background: #101827;
+  color: white;
+  text-align: center;
+  padding: 20px;
+}
+.container {
+  max-width: 500px;
+  margin: auto;
+  background: #1e293b;
+  padding: 20px;
+  border-radius: 15px;
+}
+input {
+  width: 90%;
+  padding: 13px;
+  border-radius: 10px;
+  border: none;
+}
+button {
+  padding: 12px 20px;
+  margin: 10px;
+  background: #2563eb;
+  color: white;
+  border: none;
+  border-radius: 10px;
+}
+</style>
+</head>
+<body>
+<div class="container">
+<h1>🤖 SAKSHAR AI</h1>
+<p>Your Free Study Assistant</p>
+<input id="question" placeholder="अपना सवाल लिखें...">
+<button onclick="ask()">पूछें</button>
+<p id="answer">नमस्ते! मैं SAKSHAR AI हूँ।</p>
+</div>
+<script>
+function ask() {
+ document.getElementById("answer").innerText =
+ "आपका सवाल मिल गया! असली AI जवाब जोड़ने का काम अभी बाकी है।";
+}
+</script>
+</body>
+</html>
