@@ -1,90 +1,407 @@
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="hi">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SAKSHAR AI</title>
+<title>SAKSHAR AI - Smart Learning</title>
 <style>
+:root {
+  --bg:#080f25; --panel:#111d3a; --panel2:#19294d;
+  --text:#f5f7ff; --muted:#aab7d5; --blue:#5685ff;
+  --purple:#a56bff; --green:#35d6a0; --border:#293b64;
+}
 *{box-sizing:border-box}
-body{
- margin:0;background:#0b1020;color:white;
- font-family:Arial,sans-serif;height:100vh;
- display:flex;flex-direction:column
+body{margin:0;background:var(--bg);color:var(--text);font-family:Arial,sans-serif}
+button,input{font:inherit}
+header{padding:17px 20px;background:#101b36;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:12px;position:sticky;top:0;z-index:5}
+.logo{font-size:21px;font-weight:900;letter-spacing:1px}
+.logo span{color:#79a2ff}
+.points{background:#25375f;padding:9px 13px;border-radius:20px;color:#ffe17a;font-weight:bold}
+main{max-width:1050px;margin:auto;padding:20px}
+.hero{background:linear-gradient(120deg,#244caa,#713bb0);padding:25px;border-radius:22px;margin-bottom:20px}
+.hero h1{margin:0 0 8px;font-size:27px}
+.hero p{margin:0;color:#e1e8ff;line-height:1.6}
+nav{display:flex;gap:9px;overflow-x:auto;padding:4px 0 15px}
+nav button,.btn{border:0;border-radius:12px;padding:12px 16px;background:var(--panel2);color:white;cursor:pointer;white-space:nowrap}
+nav button.active,.btn.primary{background:linear-gradient(120deg,var(--blue),var(--purple))}
+nav button:hover,.btn:hover{filter:brightness(1.15)}
+.page{display:none}.page.active{display:block}
+.card{background:var(--panel);border:1px solid var(--border);border-radius:18px;padding:19px;margin-bottom:16px}
+.card h2,.card h3{margin-top:0}
+.muted{color:var(--muted);line-height:1.6}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:13px}
+.game-card{background:var(--panel);border:1px solid var(--border);border-radius:17px;padding:18px;cursor:pointer;transition:.2s}
+.game-card:hover{transform:translateY(-3px);border-color:var(--blue)}
+.game-card .emoji{font-size:34px}
+.game-card h3{margin:10px 0 5px}
+input{width:100%;background:#0b1530;border:1px solid var(--border);color:white;padding:14px;border-radius:12px;outline:none}
+input:focus{border-color:var(--blue)}
+button:disabled{opacity:.5;cursor:not-allowed}
+.chat-box{height:340px;overflow-y:auto;background:#0b1530;border-radius:14px;padding:13px;margin-bottom:12px}
+.msg{padding:11px 13px;border-radius:13px;margin:9px 0;max-width:90%;line-height:1.55;white-space:pre-wrap;overflow-wrap:anywhere}
+.msg.user{background:#3158ad;margin-left:auto}
+.msg.ai{background:#202e50;margin-right:auto}
+.chat-row{display:flex;gap:8px}
+.chat-row input{flex:1;min-width:0}
+.question{font-size:20px;line-height:1.5;margin:15px 0}
+.option{display:block;width:100%;text-align:left;margin:9px 0;padding:13px;background:#1b2b50;color:white;border:1px solid var(--border);border-radius:12px;cursor:pointer}
+.option:hover{border-color:var(--blue)}
+.option.correct{background:#145b45;border-color:var(--green)}
+.option.wrong{background:#682c3a;border-color:#ff7185}
+.result{font-size:18px;font-weight:bold;margin:14px 0}
+.center{text-align:center}
+.hidden{display:none!important}
+footer{text-align:center;padding:25px;color:var(--muted);font-size:13px}
+.small{font-size:13px;color:var(--muted)}
+@media(max-width:600px){
+ main{padding:13px}
+ .hero{padding:20px}
+ .hero h1{font-size:23px}
+ header{padding:13px}
+ .logo{font-size:18px}
+ .chat-box{height:48vh}
 }
-header{
- padding:18px;background:#151d35;
- text-align:center;border-bottom:1px solid #293653
-}
-header h2{margin:0;color:#65d9ff}
-header p{margin:6px 0 0;color:#aab6d3;font-size:12px}
-#chat{
- flex:1;overflow-y:auto;padding:18px;
- display:flex;flex-direction:column;gap:14px
-}
-.msg{
- padding:13px 16px;border-radius:15px;
- max-width:85%;line-height:1.5;white-space:pre-wrap
-}
-.user{background:#1769aa;align-self:flex-end}
-.ai{background:#202b45;align-self:flex-start}
-.bottom{
- display:flex;gap:8px;padding:12px;
- background:#151d35
-}
-input{
- flex:1;min-width:0;padding:14px;border-radius:12px;
- border:1px solid #405070;background:#0b1020;
- color:white;font-size:16px;outline:none
-}
-button{
- border:0;border-radius:12px;padding:0 20px;
- background:#16a6d9;color:white;font-weight:bold;
- font-size:15px
-}
-footer{text-align:center;padding:9px;color:#8997b5;font-size:11px}
 </style>
 </head>
 <body>
+
 <header>
-<h2>✨ SAKSHAR AI</h2>
-<p>Your Smart AI Assistant</p>
+  <div class="logo">✨ SAKSHAR <span>AI</span></div>
+  <div class="points">🏆 <span id="points">0</span> Points</div>
 </header>
 
-<main id="chat">
-<div class="msg ai">नमस्ते! 👋 मैं SAKSHAR AI हूँ। बताओ, मैं तुम्हारी क्या मदद करूँ?</div>
+<main>
+<section class="hero">
+  <h1>नमस्ते! 👋 SAKSHAR AI में आपका स्वागत है</h1>
+  <p>सीखो, खेलो और आगे बढ़ो! पढ़ाई को मज़ेदार बनाने का नया तरीका।</p>
+</section>
+
+<nav>
+  <button class="active" data-page="home">🏠 Home</button>
+  <button data-page="chat">🤖 AI Chat</button>
+  <button data-page="games">🎮 Games</button>
+  <button data-page="about">ℹ️ About</button>
+</nav>
+
+<section class="page active" id="home">
+  <div class="card">
+    <h2>🌟 आज क्या सीखना चाहोगे?</h2>
+    <p class="muted">अपने सवाल पूछो या कोई मज़ेदार गेम खेलो। हर सही जवाब पर पॉइंट्स कमाओ!</p>
+    <button class="btn primary" onclick="showPage('chat')">AI से बात करो →</button>
+    <button class="btn" onclick="showPage('games')">गेम खेलो 🎮</button>
+  </div>
+  <div class="grid">
+    <div class="game-card" onclick="showPage('chat')">
+      <div class="emoji">🤖</div><h3>AI Teacher</h3>
+      <p class="muted">किसी भी विषय का सवाल पूछो।</p>
+    </div>
+    <div class="game-card" onclick="startGame('quiz')">
+      <div class="emoji">🧠</div><h3>GK Quiz</h3>
+      <p class="muted">अपना सामान्य ज्ञान जाँचो।</p>
+    </div>
+    <div class="game-card" onclick="startGame('math')">
+      <div class="emoji">➗</div><h3>Math Challenge</h3>
+      <p class="muted">गणित के सवाल हल करो।</p>
+    </div>
+    <div class="game-card" onclick="startGame('riddle')">
+      <div class="emoji">🧩</div><h3>पहेली चुनौती</h3>
+      <p class="muted">दिमाग लगाओ और जवाब दो।</p>
+    </div>
+  </div>
+</section>
+
+<section class="page" id="chat">
+  <div class="card">
+    <h2>🤖 SAKSHAR AI Chat</h2>
+    <p class="muted">अपना सवाल लिखो। मैं तुम्हारी मदद करने की कोशिश करूँगा।</p>
+    <div class="chat-box" id="chatBox">
+      <div class="msg ai">नमस्ते! 😊 मैं SAKSHAR AI हूँ। आज तुम्हें क्या सीखना है?</div>
+    </div>
+    <div class="chat-row">
+      <input id="chatInput" placeholder="अपना सवाल यहाँ लिखें..." maxlength="3000">
+      <button class="btn primary" id="sendBtn" onclick="sendMessage()">भेजें ➤</button>
+    </div>
+    <p class="small">कृपया अपना पासवर्ड या निजी जानकारी चैट में न लिखें।</p>
+  </div>
+</section>
+
+<section class="page" id="games">
+  <div id="gameMenu">
+    <div class="card">
+      <h2>🎮 Learning Games Zone</h2>
+      <p class="muted">अपना पसंदीदा गेम चुनो और पॉइंट्स जीतो!</p>
+    </div>
+    <div class="grid">
+      <div class="game-card" onclick="startGame('quiz')">
+        <div class="emoji">🧠</div><h3>GK Quiz</h3><p class="muted">ज्ञान की परीक्षा</p>
+      </div>
+      <div class="game-card" onclick="startGame('math')">
+        <div class="emoji">➗</div><h3>Math Challenge</h3><p class="muted">गणित की चुनौती</p>
+      </div>
+      <div class="game-card" onclick="startGame('word')">
+        <div class="emoji">🔤</div><h3>Word Game</h3><p class="muted">शब्द पहचानो</p>
+      </div>
+      <div class="game-card" onclick="startGame('riddle')">
+        <div class="emoji">🧩</div><h3>Riddle Game</h3><p class="muted">पहेलियाँ बुझाओ</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="card hidden" id="gameArea">
+    <button class="btn" onclick="backGames()">← सभी गेम</button>
+    <div id="gameContent" class="center"></div>
+  </div>
+</section>
+
+<section class="page" id="about">
+  <div class="card">
+    <h2>✨ SAKSHAR AI के बारे में</h2>
+    <p class="muted">SAKSHAR AI एक learning platform है जिसका उद्देश्य बच्चों को पढ़ाई, सवाल-जवाब और मज़ेदार गेम्स के माध्यम से सीखने में मदद करना है।</p>
+    <h3>हमारी सुविधाएँ</h3>
+    <p>🤖 AI Chat – सवाल पूछो</p>
+    <p>🧠 Quiz – अपना ज्ञान बढ़ाओ</p>
+    <p>➗ Math – गणित का अभ्यास करो</p>
+    <p>🔤 Word Game – शब्द सीखो</p>
+    <p>🏆 Points – खेलकर पॉइंट्स कमाओ</p>
+    <hr style="border-color:#293b64">
+    <p class="muted">Created with ❤️ by Sakshar Jaiswal</p>
+  </div>
+</section>
 </main>
 
-<div class="bottom">
-<input id="message" placeholder="Ask me anything..." />
-<button onclick="sendMessage()">Send</button>
-</div>
-
-<footer>Made with ❤️ by Sakshar Jaiswal</footer>
+<footer>© 2026 SAKSHAR AI · Learn • Play • Grow 🌟</footer>
 
 <script>
-const chat=document.getElementById("chat");
-const input=document.getElementById("message");
+// अपना Cloudflare Worker URL यहाँ पहले से जोड़ा गया है।
+const API_URL = "https://sakshar--ai.jtechnicalshort.workers.dev/";
+
+let points = Number(localStorage.getItem("saksharPoints") || 0);
+document.getElementById("points").textContent = points;
+
+function addPoints(n){
+  points += n;
+  localStorage.setItem("saksharPoints", points);
+  document.getElementById("points").textContent = points;
+}
+
+function showPage(page){
+  document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+  document.getElementById(page).classList.add("active");
+  document.querySelectorAll("nav button").forEach(b=>{
+    b.classList.toggle("active",b.dataset.page===page);
+  });
+}
+document.querySelectorAll("nav button").forEach(b=>{
+  b.addEventListener("click",()=>showPage(b.dataset.page));
+});
+
+// AI CHAT
+let messages = [{
+  role:"system",
+  content:"You are SAKSHAR AI, a friendly and helpful learning assistant for students. Reply in the language used by the student. Explain Class 8 school subjects in simple Hindi when appropriate. Be accurate, encouraging and clear. If you do not know something, say so."
+}];
 
 function addMessage(text,type){
- const div=document.createElement("div");
- div.className="msg "+type;
- div.textContent=text;
- chat.appendChild(div);
- chat.scrollTop=chat.scrollHeight;
+  const box=document.getElementById("chatBox");
+  const div=document.createElement("div");
+  div.className="msg "+type;
+  div.textContent=text;
+  box.appendChild(div);
+  box.scrollTop=box.scrollHeight;
+  return div;
 }
 
 async function sendMessage(){
- const text=input.value.trim();
- if(!text)return;
- addMessage(text,"user");
- input.value="";
- addMessage("AI connection is being set up. Please wait!","ai");
-}
+  const input=document.getElementById("chatInput");
+  const btn=document.getElementById("sendBtn");
+  const text=input.value.trim();
+  if(!text)return;
 
-input.addEventListener("keydown",e=>{
- if(e.key==="Enter")sendMessage();
+  addMessage(text,"user");
+  input.value="";
+  messages.push({role:"user",content:text});
+  btn.disabled=true;
+  btn.textContent="रुको...";
+  const loading=addMessage("🤔 जवाब तैयार हो रहा है...","ai");
+
+  try{
+    const response=await fetch(API_URL,{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({messages:messages})
+    });
+    const data=await response.json();
+
+    if(!response.ok){
+      throw new Error(data.error || "Server से जवाब नहीं मिला।");
+    }
+    const reply=data.choices?.[0]?.message?.content;
+    if(!reply)throw new Error("AI का जवाब खाली मिला।");
+
+    loading.textContent=reply;
+    messages.push({role:"assistant",content:reply});
+    if(messages.length>21)messages=[messages[0],...messages.slice(-20)];
+  }catch(error){
+    loading.textContent="माफ़ करना! AI से कनेक्शन नहीं हो पाया।\n\nसमस्या: "+error.message+"\n\nCloudflare Worker और GROQ_API_KEY की सेटिंग जाँचें।";
+    messages.pop();
+  }finally{
+    btn.disabled=false;
+    btn.textContent="भेजें ➤";
+  }
+}
+document.getElementById("chatInput").addEventListener("keydown",e=>{
+  if(e.key==="Enter")sendMessage();
 });
+
+// GAMES
+const quizzes=[
+ {q:"भारत की राजधानी क्या है?",o:["मुंबई","नई दिल्ली","लखनऊ","जयपुर"],a:1},
+ {q:"भारत का राष्ट्रीय पशु कौन है?",o:["शेर","हाथी","बाघ","घोड़ा"],a:2},
+ {q:"सौरमंडल का सबसे बड़ा ग्रह कौन है?",o:["पृथ्वी","मंगल","बृहस्पति","शुक्र"],a:2},
+ {q:"भारत का संविधान कब लागू हुआ?",o:["15 अगस्त 1947","26 जनवरी 1950","2 अक्टूबर 1950","26 नवंबर 1949"],a:1},
+ {q:"पौधे अपना भोजन किस प्रक्रिया से बनाते हैं?",o:["श्वसन","प्रकाश संश्लेषण","वाष्पीकरण","पाचन"],a:1},
+ {q:"ताजमहल कहाँ स्थित है?",o:["दिल्ली","आगरा","जयपुर","लखनऊ"],a:1},
+ {q:"एक सप्ताह में कितने दिन होते हैं?",o:["5","6","7","8"],a:2},
+ {q:"भारत का राष्ट्रीय फूल कौन सा है?",o:["गुलाब","कमल","गेंदा","सूरजमुखी"],a:1}
+];
+const riddles=[
+ {q:"ऐसी कौन सी चीज़ है जो पानी पीते ही मर जाती है?",a:["आग","आग"],hint:"यह जलती है।"},
+ {q:"वह क्या है जो जितना बढ़ता है, उतना ही कम दिखाई देता है?",a:["अंधेरा","अंधकार"],hint:"रात में होता है।"},
+ {q:"ऐसी कौन सी चीज़ है जिसके दाँत हैं पर वह काट नहीं सकती?",a:["कंघी"],hint:"बालों में इस्तेमाल होती है।"},
+ {q:"बिना पैरों के चलती है और कभी वापस नहीं आती?",a:["घड़ी","समय","वक्त"],hint:"यह लगातार बीतता रहता है।"}
+];
+const words=[
+ {w:"KITAAB",a:"किताब"},{w:"SCHOOL",a:"स्कूल"},
+ {w:"BHARAT",a:"भारत"},{w:"PENCIL",a:"पेंसिल"},
+ {w:"GARDEN",a:"बगीचा"}
+];
+let gameType="",questionIndex=0,score=0,currentAnswer="",currentWord="";
+
+function backGames(){
+  document.getElementById("gameArea").classList.add("hidden");
+  document.getElementById("gameMenu").classList.remove("hidden");
+}
+function startGame(type){
+  gameType=type;questionIndex=0;score=0;
+  document.getElementById("gameMenu").classList.add("hidden");
+  document.getElementById("gameArea").classList.remove("hidden");
+  showPage("games");
+  nextQuestion();
+}
+function finishGame(total){
+  addPoints(score*10);
+  document.getElementById("gameContent").innerHTML=`
+    <div style="font-size:55px">🏆</div>
+    <h2>शाबाश! गेम पूरा हुआ</h2>
+    <p class="result">तुम्हारा स्कोर: ${score} / ${total}</p>
+    <p class="muted">तुमने ${score*10} पॉइंट्स कमाए!</p>
+    <button class="btn primary" onclick="startGame('${gameType}')">फिर से खेलो</button>
+    <button class="btn" onclick="backGames()">दूसरा गेम</button>`;
+}
+function nextQuestion(){
+  if(gameType==="quiz")quizQuestion();
+  else if(gameType==="math")mathQuestion();
+  else if(gameType==="riddle")riddleQuestion();
+  else if(gameType==="word")wordQuestion();
+}
+function quizQuestion(){
+  if(questionIndex>=5){finishGame(5);return;}
+  const item=quizzes[(questionIndex*3+1)%quizzes.length];
+  renderOptions("🧠 GK Quiz",item.q,item.o,item.a,()=>{
+    questionIndex++;nextQuestion();
+  });
+}
+function renderOptions(title,q,options,answer,done){
+  const area=document.getElementById("gameContent");
+  area.innerHTML=`<h2>${title}</h2><p class="small">सवाल ${questionIndex+1} / 5</p>
+  <div class="question"></div><div id="options"></div><p id="feedback" class="result"></p>`;
+  area.querySelector(".question").textContent=q;
+  const holder=document.getElementById("options");
+  options.forEach((option,i)=>{
+    const b=document.createElement("button");
+    b.className="option";b.textContent=option;
+    b.onclick=()=>{
+      if(holder.dataset.done)return;
+      holder.dataset.done="yes";
+      if(i===answer){b.classList.add("correct");score++;document.getElementById("feedback").textContent="✅ बिल्कुल सही!";}
+      else{b.classList.add("wrong");holder.children[answer].classList.add("correct");document.getElementById("feedback").textContent="❌ सही जवाब: "+options[answer];}
+      [...holder.children].forEach(x=>x.disabled=true);
+      const next=document.createElement("button");
+      next.className="btn primary";next.textContent=questionIndex===4?"परिणाम देखो":"अगला सवाल →";
+      next.onclick=done;holder.appendChild(next);
+    };
+    holder.appendChild(b);
+  });
+}
+function mathQuestion(){
+  if(questionIndex>=5){finishGame(5);return;}
+  const a=Math.floor(Math.random()*20)+5;
+  const b=Math.floor(Math.random()*15)+2;
+  const op=["+","-","×"][Math.floor(Math.random()*3)];
+  const answer=op==="+"?a+b:op==="-"?a-b:a*b;
+  const area=document.getElementById("gameContent");
+  area.innerHTML=`<h2>➗ Math Challenge</h2>
+  <p class="small">सवाल ${questionIndex+1} / 5</p>
+  <div class="question">${a} ${op} ${b} = ?</div>
+  <input id="mathAnswer" type="number" placeholder="अपना जवाब लिखो">
+  <p id="feedback" class="result"></p>
+  <button class="btn primary" id="checkMath">जवाब जाँचें</button>`;
+  document.getElementById("checkMath").onclick=()=>{
+    const value=document.getElementById("mathAnswer").value;
+    if(value==="")return;
+    const correct=Number(value)===answer;
+    if(correct)score++;
+    document.getElementById("feedback").textContent=correct?"✅ सही जवाब!":"❌ सही जवाब है: "+answer;
+    document.getElementById("checkMath").textContent=questionIndex===4?"परिणाम देखो":"अगला सवाल →";
+    document.getElementById("checkMath").onclick=()=>{questionIndex++;nextQuestion();};
+  };
+}
+function riddleQuestion(){
+  if(questionIndex>=5){finishGame(5);return;}
+  const item=riddles[questionIndex%riddles.length];
+  const area=document.getElementById("gameContent");
+  area.innerHTML=`<h2>🧩 पहेली बुझाओ</h2>
+  <p class="small">पहेली ${questionIndex+1} / 5</p>
+  <div class="question"></div>
+  <input id="riddleAnswer" placeholder="अपना जवाब लिखो">
+  <p class="small">💡 संकेत: ${item.hint}</p>
+  <p id="feedback" class="result"></p>
+  <button class="btn primary" id="checkRiddle">जवाब जाँचें</button>`;
+  area.querySelector(".question").textContent=item.q;
+  document.getElementById("checkRiddle").onclick=()=>{
+    const val=document.getElementById("riddleAnswer").value.trim().toLowerCase();
+    if(!val)return;
+    const correct=item.a.some(a=>val===a.toLowerCase());
+    if(correct)score++;
+    document.getElementById("feedback").textContent=correct?"🎉 सही जवाब!":"सही जवाब: "+item.a[0];
+    document.getElementById("checkRiddle").textContent=questionIndex===4?"परिणाम देखो":"अगली पहेली →";
+    document.getElementById("checkRiddle").onclick=()=>{questionIndex++;nextQuestion();};
+  };
+}
+function wordQuestion(){
+  if(questionIndex>=5){finishGame(5);return;}
+  const item=words[questionIndex];
+  let scrambled=item.w.split("").sort(()=>Math.random()-.5).join("");
+  if(scrambled===item.w)scrambled=item.w.slice(1)+item.w[0];
+  const area=document.getElementById("gameContent");
+  area.innerHTML=`<h2>🔤 Word Game</h2>
+  <p class="small">शब्द ${questionIndex+1} / 5</p>
+  <div class="question" style="letter-spacing:6px">${scrambled}</div>
+  <p class="muted">इन अक्षरों से सही अंग्रेज़ी शब्द बनाओ।</p>
+  <input id="wordAnswer" placeholder="Type your answer">
+  <p id="feedback" class="result"></p>
+  <button class="btn primary" id="checkWord">जवाब जाँचें</button>`;
+  document.getElementById("checkWord").onclick=()=>{
+    const val=document.getElementById("wordAnswer").value.trim().toUpperCase();
+    if(!val)return;
+    const correct=val===item.w;
+    if(correct)score++;
+    document.getElementById("feedback").textContent=correct?"🎉 बिल्कुल सही!":"सही शब्द: "+item.w+" ("+item.a+")";
+    document.getElementById("checkWord").textContent=questionIndex===4?"परिणाम देखो":"अगला शब्द →";
+    document.getElementById("checkWord").onclick=()=>{questionIndex++;nextQuestion();};
+  };
+}
 </script>
 </body>
 </html>
