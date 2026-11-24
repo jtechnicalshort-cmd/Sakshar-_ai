@@ -8,7 +8,7 @@
 <style>
 *{box-sizing:border-box}
 body{margin:0;font-family:Arial,sans-serif;background:#0b1020;color:white}
-header{padding:18px;background:#121a32;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0}
+header{padding:18px;background:#121a32;display:flex;justify-content:space-between;align-items:center}
 .logo{font-size:23px;font-weight:bold;color:#55d6ff}
 button,select{padding:12px;border:0;border-radius:10px;cursor:pointer}
 button{background:#3978ff;color:white;font-weight:bold}
@@ -22,7 +22,7 @@ main{max-width:1000px;margin:auto;padding:18px}
 .tile:hover{background:#30466e}
 input,textarea,select{width:100%;padding:13px;margin:7px 0;background:#0d1730;color:white;border:1px solid #405477;border-radius:10px}
 #chat{height:300px;overflow:auto;background:#0b1429;padding:12px;border-radius:12px}
-.msg{padding:10px;margin:8px 0;border-radius:10px;white-space:pre-wrap}
+.msg{padding:10px;margin:8px 0;border-radius:10px;white-space:pre-wrap;overflow-wrap:anywhere}
 .user{background:#244b91}
 .bot{background:#26334d}
 .small{color:#aebbd5;font-size:13px}
@@ -30,6 +30,7 @@ footer{text-align:center;padding:25px;color:#9eacc8}
 </style>
 </head>
 <body>
+
 <header>
 <div class="logo">📚 SAKSHAR AI</div>
 <div>Smart Learning 🚀</div>
@@ -57,11 +58,13 @@ footer{text-align:center;padding:25px;color:#9eacc8}
 <section class="panel">
 <h2>🤖 SAKSHAR AI Tutor</h2>
 <p class="small">अपना सवाल पूछो और AI से पढ़ाई में मदद लो।</p>
+
 <div id="chat">
 <div class="msg bot">नमस्ते! मैं SAKSHAR AI हूँ। 😊 आज क्या पढ़ना चाहते हो?</div>
 </div>
+
 <textarea id="question" rows="3" placeholder="अपना सवाल यहाँ लिखें..."></textarea>
-<button onclick="sendMessage()">सवाल भेजें ➤</button>
+<button id="sendButton" onclick="sendMessage()">सवाल भेजें ➤</button>
 </section>
 
 <section class="panel">
@@ -70,7 +73,7 @@ footer{text-align:center;padding:25px;color:#9eacc8}
 <div class="tile" onclick="ask('मेरी कक्षा के लिए आसान भाषा में महत्वपूर्ण नोट्स बनाओ')">📒<br>Notes</div>
 <div class="tile" onclick="ask('मेरी कक्षा के महत्वपूर्ण प्रश्न उत्तर बनाओ')">❓<br>Question Answers</div>
 <div class="tile" onclick="ask('मेरी कक्षा का MCQ Quiz शुरू करो')">📝<br>MCQ Quiz</div>
-<div class="tile" onclick="ask('मेरी कक्षा के लिए पिछले वर्षों के प्रश्नपत्र के अभ्यास प्रश्न बनाओ')">📄<br>Previous Papers</div>
+<div class="tile" onclick="ask('मेरी कक्षा के लिए अभ्यास प्रश्नपत्र बनाओ')">📄<br>Practice Papers</div>
 <div class="tile" onclick="ask('मेरी कक्षा के लिए विज्ञान के महत्वपूर्ण प्रश्न बताओ')">🔬<br>Science</div>
 <div class="tile" onclick="ask('मेरी कक्षा के लिए गणित के सवाल अभ्यास कराओ')">➗<br>Maths</div>
 </div>
@@ -83,17 +86,15 @@ footer{text-align:center;padding:25px;color:#9eacc8}
 <div class="tile" onclick="startGame('gk')">🌍<br>GK Quiz</div>
 <div class="tile" onclick="startGame('word')">🔤<br>Word Game</div>
 </div>
-<div id="game" class="panel">
-गेम खेलने के लिए ऊपर किसी गेम को चुनें।
-</div>
+<div id="game" class="panel">गेम खेलने के लिए ऊपर किसी गेम को चुनें।</div>
 </section>
 
 <section class="panel">
 <h2>🏆 Competition Zone</h2>
 <div class="grid">
-<div class="tile" onclick="ask('मेरे लिए ओलंपियाड की तैयारी का प्लान बनाओ')">🏅 Olympiad</div>
-<div class="tile" onclick="ask('मेरे लिए सामान्य ज्ञान प्रतियोगिता के प्रश्न बनाओ')">🧠 GK Competition</div>
-<div class="tile" onclick="ask('मेरे लिए विज्ञान प्रतियोगिता के प्रश्न बनाओ')">🔬 Science Competition</div>
+<div class="tile" onclick="ask('मेरे लिए ओलंपियाड की तैयारी का प्लान बनाओ')">🏅<br>Olympiad</div>
+<div class="tile" onclick="ask('सामान्य ज्ञान प्रतियोगिता के प्रश्न बनाओ')">🧠<br>GK Competition</div>
+<div class="tile" onclick="ask('विज्ञान प्रतियोगिता के प्रश्न बनाओ')">🔬<br>Science Competition</div>
 </div>
 </section>
 
@@ -104,110 +105,138 @@ Created with ❤️ by Sakshar Jaiswal
 </main>
 
 <script>
-const API_URL="https://sakshar--ai.jtechnicalshort.workers.dev/";
-let history=[];
+const API_URL = "https://sakshar--ai.jtechnicalshort.workers.dev/";
+let history = [];
 
-function addMessage(text,type){
- const chat=document.getElementById("chat");
- const div=document.createElement("div");
- div.className="msg "+type;
- div.textContent=text;
- chat.appendChild(div);
- chat.scrollTop=chat.scrollHeight;
+function addMessage(text, type) {
+  const chat = document.getElementById("chat");
+  const div = document.createElement("div");
+  div.className = "msg " + type;
+  div.textContent = text;
+  chat.appendChild(div);
+  chat.scrollTop = chat.scrollHeight;
 }
 
-async function sendMessage(){
- const box=document.getElementById("question");
- const q=box.value.trim();
- if(!q)return;
+async function sendMessage() {
+  const box = document.getElementById("question");
+  const button = document.getElementById("sendButton");
+  const q = box.value.trim();
 
- box.value="";
- addMessage(q,"user");
+  if (!q) return;
 
- history.push({
-  role:"user",
-  content:"मैं "+document.getElementById("class").value+
-  " में पढ़ता/पढ़ती हूँ। "+q
- });
+  box.value = "";
+  addMessage(q, "user");
 
- const loading=document.createElement("div");
- loading.className="msg bot";
- loading.textContent="SAKSHAR AI जवाब तैयार कर रहा है...";
- document.getElementById("chat").appendChild(loading);
-
- try{
-  const response=await fetch(API_URL,{
-   method:"POST",
-   headers:{"Content-Type":"application/json"},
-   body:JSON.stringify({messages:history})
+  history.push({
+    role: "user",
+    content: "मैं " + document.getElementById("class").value +
+      " में पढ़ता/पढ़ती हूँ। " + q
   });
 
-  const data=await response.json();
+  const loading = document.createElement("div");
+  loading.className = "msg bot";
+  loading.textContent = "SAKSHAR AI जवाब तैयार कर रहा है...";
+  document.getElementById("chat").appendChild(loading);
 
-  if(!response.ok){
-   throw new Error(data.error||"Server error");
+  button.disabled = true;
+  button.textContent = "कृपया प्रतीक्षा करें...";
+
+  try {
+    const response = await fetch(API_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ messages: history })
+    });
+
+    const raw = await response.text();
+
+    console.log("Worker HTTP Status:", response.status);
+    console.log("Worker Response:", raw);
+
+    if (!raw || !raw.trim()) {
+      throw new Error("Worker ने खाली जवाब दिया। HTTP Status: " + response.status);
+    }
+
+    let data;
+    try {
+      data = JSON.parse(raw);
+    } catch (parseError) {
+      throw new Error("Worker का जवाब JSON नहीं है। HTTP Status: " + response.status);
+    }
+
+    if (!response.ok) {
+      throw new Error(data.error || "Server Error: " + response.status);
+    }
+
+    const answer = data.choices?.[0]?.message?.content || data.reply;
+
+    if (!answer) {
+      throw new Error(data.error || "AI से जवाब नहीं मिला।");
+    }
+
+    loading.textContent = answer;
+    history.push({
+      role: "assistant",
+      content: answer
+    });
+
+  } catch (error) {
+    loading.textContent = "कनेक्शन समस्या: " + error.message;
+    console.error("SAKSHAR AI Error:", error);
+  } finally {
+    button.disabled = false;
+    button.textContent = "सवाल भेजें ➤";
   }
-
-  const answer=data.choices?.[0]?.message?.content||
-  data.reply||"जवाब नहीं मिला।";
-
-  loading.textContent=answer;
-  history.push({role:"assistant",content:answer});
-
- }catch(e){
-  loading.textContent="कनेक्शन में समस्या: "+e.message+
-  "। Worker URL और API सेटिंग जाँचें।";
- }
 }
 
-function ask(q){
- document.getElementById("question").value=q;
- sendMessage();
+function ask(q) {
+  document.getElementById("question").value = q;
+  sendMessage();
 }
 
-let gameAnswer=0;
+let gameAnswer = 0;
 
-function startGame(type){
- const area=document.getElementById("game");
+function startGame(type) {
+  const area = document.getElementById("game");
 
- if(type==="math"){
-  let a=Math.floor(Math.random()*20)+1;
-  let b=Math.floor(Math.random()*20)+1;
-  gameAnswer=a+b;
+  if (type === "math") {
+    const a = Math.floor(Math.random() * 20) + 1;
+    const b = Math.floor(Math.random() * 20) + 1;
+    gameAnswer = a + b;
 
-  area.innerHTML=`<h3>➕ ${a} + ${b} = ?</h3>
-  <input id="gameInput" type="number" placeholder="उत्तर लिखें">
-  <button onclick="checkGame()">जवाब जाँचें</button>
-  <p id="result"></p>`;
-
- }else if(type==="gk"){
-  gameAnswer="नई दिल्ली";
-
-  area.innerHTML=`<h3>भारत की राजधानी क्या है?</h3>
-  <button onclick="checkGK('नई दिल्ली')">नई दिल्ली</button>
-  <button onclick="checkGK('मुंबई')">मुंबई</button>
-  <p id="result"></p>`;
-
- }else{
-  gameAnswer="कमल";
-
-  area.innerHTML=`<h3>भारत का राष्ट्रीय फूल कौन सा है?</h3>
-  <button onclick="checkGK('कमल')">कमल</button>
-  <button onclick="checkGK('गुलाब')">गुलाब</button>
-  <p id="result"></p>`;
- }
+    area.innerHTML = `
+      <h3>➕ ${a} + ${b} = ?</h3>
+      <input id="gameInput" type="number" placeholder="उत्तर लिखें">
+      <button onclick="checkGame()">जवाब जाँचें</button>
+      <p id="result"></p>`;
+  } else if (type === "gk") {
+    gameAnswer = "नई दिल्ली";
+    area.innerHTML = `
+      <h3>भारत की राजधानी क्या है?</h3>
+      <button onclick="checkGK('नई दिल्ली')">नई दिल्ली</button>
+      <button onclick="checkGK('मुंबई')">मुंबई</button>
+      <p id="result"></p>`;
+  } else {
+    gameAnswer = "कमल";
+    area.innerHTML = `
+      <h3>भारत का राष्ट्रीय फूल कौन सा है?</h3>
+      <button onclick="checkGK('कमल')">कमल</button>
+      <button onclick="checkGK('गुलाब')">गुलाब</button>
+      <p id="result"></p>`;
+  }
 }
 
-function checkGame(){
- const value=Number(document.getElementById("gameInput").value);
-
- document.getElementById("result").textContent=
- value===gameAnswer?"🎉 बिल्कुल सही!":"❌ फिर से कोशिश करो!";
+function checkGame() {
+  const value = Number(document.getElementById("gameInput").value);
+  document.getElementById("result").textContent =
+    value === gameAnswer ? "🎉 बिल्कुल सही!" : "❌ फिर से कोशिश करो!";
 }
 
-function checkGK(value){
- document.getElementById("result").textContent=
- value===gameAnswer?"🎉 शाबाश! सही जवाब!":"❌ गलत जवाब, फिर कोशिश करो।";
+function checkGK(value) {
+  document.getElementById("result").textContent =
+    value === gameAnswer ? "🎉 शाबाश! सही जवाब!" : "❌ गलत जवाब, फिर कोशिश करो।";
 }
 </script>
 </body>
