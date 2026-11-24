@@ -104,7 +104,7 @@ Created with ❤️ by Sakshar Jaiswal
 </main>
 
 <script>
-const API_URL="https://sakshar-ai-api.jtechnicalshort.workers.dev/";
+const API_URL="https://sakshar--ai.jtechnicalshort.workers.dev/";
 let history=[];
 
 function addMessage(text,type){
@@ -120,26 +120,43 @@ async function sendMessage(){
  const box=document.getElementById("question");
  const q=box.value.trim();
  if(!q)return;
+
  box.value="";
  addMessage(q,"user");
- history.push({role:"user",content:"मैं "+document.getElementById("class").value+" में पढ़ता/पढ़ती हूँ। "+q});
+
+ history.push({
+  role:"user",
+  content:"मैं "+document.getElementById("class").value+
+  " में पढ़ता/पढ़ती हूँ। "+q
+ });
+
  const loading=document.createElement("div");
  loading.className="msg bot";
  loading.textContent="SAKSHAR AI जवाब तैयार कर रहा है...";
  document.getElementById("chat").appendChild(loading);
+
  try{
   const response=await fetch(API_URL,{
    method:"POST",
    headers:{"Content-Type":"application/json"},
    body:JSON.stringify({messages:history})
   });
+
   const data=await response.json();
-  if(!response.ok)throw new Error(data.error||"Server error");
-  const answer=data.choices?.[0]?.message?.content||data.reply||"जवाब नहीं मिला।";
+
+  if(!response.ok){
+   throw new Error(data.error||"Server error");
+  }
+
+  const answer=data.choices?.[0]?.message?.content||
+  data.reply||"जवाब नहीं मिला।";
+
   loading.textContent=answer;
   history.push({role:"assistant",content:answer});
+
  }catch(e){
-  loading.textContent="कनेक्शन में समस्या है। Worker URL और API सेटिंग जाँचें।";
+  loading.textContent="कनेक्शन में समस्या: "+e.message+
+  "। Worker URL और API सेटिंग जाँचें।";
  }
 }
 
@@ -149,34 +166,45 @@ function ask(q){
 }
 
 let gameAnswer=0;
+
 function startGame(type){
  const area=document.getElementById("game");
+
  if(type==="math"){
   let a=Math.floor(Math.random()*20)+1;
   let b=Math.floor(Math.random()*20)+1;
   gameAnswer=a+b;
+
   area.innerHTML=`<h3>➕ ${a} + ${b} = ?</h3>
   <input id="gameInput" type="number" placeholder="उत्तर लिखें">
-  <button onclick="checkGame()">जवाब जाँचें</button><p id="result"></p>`;
+  <button onclick="checkGame()">जवाब जाँचें</button>
+  <p id="result"></p>`;
+
  }else if(type==="gk"){
   gameAnswer="नई दिल्ली";
+
   area.innerHTML=`<h3>भारत की राजधानी क्या है?</h3>
   <button onclick="checkGK('नई दिल्ली')">नई दिल्ली</button>
   <button onclick="checkGK('मुंबई')">मुंबई</button>
   <p id="result"></p>`;
+
  }else{
   gameAnswer="कमल";
+
   area.innerHTML=`<h3>भारत का राष्ट्रीय फूल कौन सा है?</h3>
   <button onclick="checkGK('कमल')">कमल</button>
   <button onclick="checkGK('गुलाब')">गुलाब</button>
   <p id="result"></p>`;
  }
 }
+
 function checkGame(){
  const value=Number(document.getElementById("gameInput").value);
+
  document.getElementById("result").textContent=
  value===gameAnswer?"🎉 बिल्कुल सही!":"❌ फिर से कोशिश करो!";
 }
+
 function checkGK(value){
  document.getElementById("result").textContent=
  value===gameAnswer?"🎉 शाबाश! सही जवाब!":"❌ गलत जवाब, फिर कोशिश करो।";
