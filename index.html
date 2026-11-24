@@ -3,528 +3,184 @@
 <html lang="hi">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#080f25">
-<title>SAKSHAR AI - Smart Learning Platform</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SAKSHAR AI - Smart Learning</title>
 <style>
-:root{
---bg:#080f25;--panel:#111d3a;--panel2:#1c2c50;
---text:#f5f7ff;--muted:#aab7d5;--blue:#5685ff;
---purple:#a56bff;--green:#35d6a0;--border:#293b64;
-}
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--text);
-font-family:Arial,sans-serif}
-button,input,select{font:inherit}
-header{position:sticky;top:0;z-index:10;background:#101b36;
-padding:14px 18px;border-bottom:1px solid var(--border);
-display:flex;align-items:center;justify-content:space-between}
-.logo{font-size:21px;font-weight:900}
-.logo span{color:#79a2ff}
-.points{background:#25375f;padding:9px 12px;border-radius:20px;color:#ffe17a}
-main{max-width:1100px;margin:auto;padding:18px}
-.hero{padding:25px;border-radius:20px;
-background:linear-gradient(120deg,#244caa,#713bb0);margin-bottom:18px}
-.hero h1{margin:0 0 9px}
-.hero p{line-height:1.6;margin:0}
-nav{display:flex;gap:8px;overflow-x:auto;padding:5px 0 16px}
-nav button,.btn{border:0;padding:11px 15px;border-radius:11px;
-background:var(--panel2);color:white;cursor:pointer;white-space:nowrap}
-nav button.active,.primary{background:linear-gradient(120deg,var(--blue),var(--purple))}
-.page{display:none}.page.active{display:block}
-.card,.game-card{background:var(--panel);border:1px solid var(--border);
-border-radius:16px;padding:18px;margin-bottom:14px}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:13px}
-.game-card{cursor:pointer;transition:.2s}
-.game-card:hover{transform:translateY(-3px);border-color:var(--blue)}
-.emoji{font-size:32px}
-h2,h3{margin-top:0}
-.muted,.small{color:var(--muted);line-height:1.6}
-.small{font-size:13px}
-input,select{width:100%;padding:13px;background:#0b1530;color:white;
-border:1px solid var(--border);border-radius:10px;margin:5px 0}
-.chat-box{height:340px;overflow:auto;background:#0b1530;
-border-radius:12px;padding:12px;margin-bottom:12px}
-.msg{padding:11px 13px;border-radius:12px;margin:9px 0;
-max-width:90%;white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.6}
-.msg.user{background:#3158ad;margin-left:auto}
-.msg.ai{background:#202e50}
-.chat-row{display:flex;gap:8px}
-.chat-row input{flex:1;min-width:0}
-.option{display:block;width:100%;text-align:left;padding:13px;
-margin:8px 0;background:#1b2b50;color:white;border:1px solid var(--border);
-border-radius:10px;cursor:pointer}
-.option:hover{border-color:var(--blue)}
-.option.correct{background:#145b45}
-.option.wrong{background:#682c3a}
-.hidden{display:none!important}
-.status{font-size:13px;color:var(--green)}
-footer{text-align:center;padding:25px;color:var(--muted)}
-a{color:#8fb0ff}
-.resource{padding:14px;background:#0d1934;border-radius:12px;
-border:1px solid var(--border);margin:9px 0}
-.resource a{display:inline-block;margin-top:8px}
-@media(max-width:600px){
-main{padding:12px}.hero{padding:19px}.hero h1{font-size:23px}
-header{padding:12px}.logo{font-size:18px}.chat-box{height:48vh}
-}
+body{margin:0;font-family:Arial,sans-serif;background:#0b1020;color:white}
+header{padding:18px;background:#121a32;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0}
+.logo{font-size:23px;font-weight:bold;color:#55d6ff}
+button,select{padding:12px;border:0;border-radius:10px;cursor:pointer}
+button{background:#3978ff;color:white;font-weight:bold}
+main{max-width:1000px;margin:auto;padding:18px}
+.hero{text-align:center;padding:35px 10px}
+.hero h1{font-size:35px;color:#65d8ff}
+.hero p{color:#c5cee5}
+.panel{background:#151f39;padding:18px;border-radius:16px;margin:15px 0}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px}
+.tile{background:#202d4d;padding:20px 10px;border-radius:14px;text-align:center;cursor:pointer}
+.tile:hover{background:#30466e}
+input,textarea,select{width:100%;padding:13px;margin:7px 0;background:#0d1730;color:white;border:1px solid #405477;border-radius:10px}
+#chat{height:300px;overflow:auto;background:#0b1429;padding:12px;border-radius:12px}
+.msg{padding:10px;margin:8px 0;border-radius:10px;white-space:pre-wrap}
+.user{background:#244b91}
+.bot{background:#26334d}
+.small{color:#aebbd5;font-size:13px}
+footer{text-align:center;padding:25px;color:#9eacc8}
 </style>
 </head>
 <body>
-
 <header>
- <div class="logo">✨ SAKSHAR <span>AI</span></div>
- <div class="points">🏆 <span id="points">0</span> Points</div>
+<div class="logo">📚 SAKSHAR AI</div>
+<div>Smart Learning 🚀</div>
 </header>
 
 <main>
 <section class="hero">
- <h1>नमस्ते! 👋 SAKSHAR AI में आपका स्वागत है</h1>
- <p>Learn • Play • Grow — अब पढ़ाई होगी और भी आसान और मजेदार!</p>
- <p id="connection" class="status">AI कनेक्शन जाँचने के लिए AI Chat खोलें।</p>
+<h1>पढ़ेगा भारत, बढ़ेगा भारत!</h1>
+<p>आपका अपना AI Study Partner — Nursery से Graduation तक</p>
 </section>
 
-<nav>
- <button class="active" data-page="home">🏠 Home</button>
- <button data-page="chat">🤖 AI Teacher</button>
- <button data-page="library">📚 Study Library</button>
- <button data-page="games">🎮 Games</button>
- <button data-page="competition">🏆 Competition</button>
- <button data-page="about">ℹ️ About</button>
-</nav>
-
-<!-- HOME -->
-<section class="page active" id="home">
- <div class="card">
-  <h2>🌟 आज क्या सीखना चाहोगे?</h2>
-  <p class="muted">अपना सवाल पूछो, Notes पढ़ो या Quiz खेलो।</p>
-  <button class="btn primary" onclick="showPage('chat')">AI से बात करो →</button>
-  <button class="btn" onclick="showPage('library')">Notes देखो 📚</button>
- </div>
- <div class="grid">
-  <div class="game-card" onclick="showPage('chat')">
-   <div class="emoji">🤖</div><h3>AI Teacher</h3>
-   <p class="muted">किसी भी विषय का सवाल पूछो।</p>
-  </div>
-  <div class="game-card" onclick="showPage('library')">
-   <div class="emoji">📚</div><h3>Study Library</h3>
-   <p class="muted">Notes, PDFs और प्रश्नपत्र।</p>
-  </div>
-  <div class="game-card" onclick="showPage('games')">
-   <div class="emoji">🎮</div><h3>Learning Games</h3>
-   <p class="muted">खेलो और सीखो।</p>
-  </div>
-  <div class="game-card" onclick="showPage('competition')">
-   <div class="emoji">🏆</div><h3>Competition</h3>
-   <p class="muted">प्रतियोगिता की तैयारी करो।</p>
-  </div>
- </div>
+<section class="panel">
+<h2>🎓 अपनी कक्षा चुनें</h2>
+<select id="class">
+<option>Nursery</option><option>LKG</option><option>UKG</option>
+<option>Class 1</option><option>Class 2</option><option>Class 3</option>
+<option>Class 4</option><option>Class 5</option><option>Class 6</option>
+<option>Class 7</option><option selected>Class 8</option>
+<option>Class 9</option><option>Class 10</option><option>Class 11</option>
+<option>Class 12</option><option>Graduation</option>
+<option>Post Graduation</option>
+</select>
 </section>
 
-<!-- AI CHAT -->
-<section class="page" id="chat">
- <div class="card">
-  <h2>🤖 SAKSHAR AI Teacher</h2>
-  <p class="muted">अपना सवाल लिखो। मैं पढ़ाई में तुम्हारी मदद करूँगा।</p>
-  <div class="chat-box" id="chatBox">
-   <div class="msg ai">नमस्ते! 😊 मैं SAKSHAR AI हूँ। आज क्या पढ़ना है?</div>
-  </div>
-  <div class="chat-row">
-   <input id="chatInput" placeholder="अपना सवाल लिखें..." maxlength="3000">
-   <button class="btn primary" id="sendBtn" onclick="sendMessage()">भेजें ➤</button>
-  </div>
-  <button class="btn" onclick="clearChat()">नई चैट</button>
-  <p class="small">अपना पासवर्ड या निजी जानकारी साझा न करें।</p>
- </div>
+<section class="panel">
+<h2>🤖 SAKSHAR AI Tutor</h2>
+<p class="small">अपना सवाल पूछो और AI से पढ़ाई में मदद लो।</p>
+<div id="chat">
+<div class="msg bot">नमस्ते! मैं SAKSHAR AI हूँ। 😊 आज क्या पढ़ना चाहते हो?</div>
+</div>
+<textarea id="question" rows="3" placeholder="अपना सवाल यहाँ लिखें..."></textarea>
+<button onclick="sendMessage()">सवाल भेजें ➤</button>
 </section>
 
-<!-- STUDY LIBRARY -->
-<section class="page" id="library">
- <div class="card">
-  <h2>📚 Digital Study Library</h2>
-  <p class="muted">Nursery से Graduation तक अपनी कक्षा चुनें।</p>
-  <label>अपनी कक्षा चुनें</label>
-  <select id="classSelect" onchange="filterLibrary()"></select>
-  <label>विषय चुनें</label>
-  <select id="subjectSelect" onchange="filterLibrary()">
-   <option value="all">सभी विषय</option>
-   <option>Hindi</option><option>English</option>
-   <option>Mathematics</option><option>Science</option>
-   <option>Social Science</option><option>Physics</option>
-   <option>Chemistry</option><option>Biology</option>
-   <option>Computer</option><option>Commerce</option>
-   <option>History</option><option>Geography</option>
-   <option>Economics</option><option>Other</option>
-  </select>
-  <label>सामग्री का प्रकार</label>
-  <select id="typeSelect" onchange="filterLibrary()">
-   <option value="all">सभी सामग्री</option>
-   <option value="notes">Notes PDF</option>
-   <option value="qa">Question Answers</option>
-   <option value="paper">Previous Year Papers</option>
-   <option value="quiz">Quiz</option>
-   <option value="competition">Competition</option>
-  </select>
-  <input id="librarySearch" placeholder="🔍 सामग्री खोजें..." oninput="filterLibrary()">
- </div>
- <div id="libraryResults"></div>
- <div class="card">
-  <h3>📌 अपनी पढ़ाई जारी रखो</h3>
-  <p class="muted">यहाँ सभी कक्षाओं और विषयों के लिए अलग-अलग PDF और प्रश्नपत्र जोड़े जा सकते हैं। अभी लाइब्रेरी में सामग्री अपलोड करना बाकी है।</p>
- </div>
+<section class="panel">
+<h2>📖 Learning Zone</h2>
+<div class="grid">
+<div class="tile" onclick="ask('मेरी कक्षा के लिए आसान भाषा में महत्वपूर्ण नोट्स बनाओ')">📒<br>Notes</div>
+<div class="tile" onclick="ask('मेरी कक्षा के महत्वपूर्ण प्रश्न उत्तर बनाओ')">❓<br>Question Answers</div>
+<div class="tile" onclick="ask('मेरी कक्षा का MCQ Quiz शुरू करो')">📝<br>MCQ Quiz</div>
+<div class="tile" onclick="ask('मेरी कक्षा के लिए पिछले वर्षों के प्रश्नपत्र के अभ्यास प्रश्न बनाओ')">📄<br>Previous Papers</div>
+<div class="tile" onclick="ask('मेरी कक्षा के लिए विज्ञान के महत्वपूर्ण प्रश्न बताओ')">🔬<br>Science</div>
+<div class="tile" onclick="ask('मेरी कक्षा के लिए गणित के सवाल अभ्यास कराओ')">➗<br>Maths</div>
+</div>
 </section>
 
-<!-- GAMES -->
-<section class="page" id="games">
- <div id="gameMenu">
-  <div class="card"><h2>🎮 Learning Games Zone</h2>
-  <p class="muted">खेलो, सीखो और Points कमाओ!</p></div>
-  <div class="grid">
-   <div class="game-card" onclick="startGame('quiz')">
-    <div class="emoji">🧠</div><h3>GK Quiz</h3>
-   </div>
-   <div class="game-card" onclick="startGame('math')">
-    <div class="emoji">➗</div><h3>Math Challenge</h3>
-   </div>
-   <div class="game-card" onclick="startGame('word')">
-    <div class="emoji">🔤</div><h3>Word Game</h3>
-   </div>
-   <div class="game-card" onclick="startGame('riddle')">
-    <div class="emoji">🧩</div><h3>Riddle Game</h3>
-   </div>
-  </div>
- </div>
- <div class="card hidden" id="gameArea">
-  <button class="btn" onclick="backGames()">← सभी गेम</button>
-  <div id="gameContent" class="center"></div>
- </div>
+<section class="panel">
+<h2>🎮 पढ़ाई वाले मजेदार गेम</h2>
+<div class="grid">
+<div class="tile" onclick="startGame('math')">➕<br>Math Challenge</div>
+<div class="tile" onclick="startGame('gk')">🌍<br>GK Quiz</div>
+<div class="tile" onclick="startGame('word')">🔤<br>Word Game</div>
+</div>
+<div id="game" class="panel">
+गेम खेलने के लिए ऊपर किसी गेम को चुनें।
+</div>
 </section>
 
-<!-- COMPETITION -->
-<section class="page" id="competition">
- <div class="card">
-  <h2>🏆 Competition Preparation Zone</h2>
-  <p class="muted">अपनी प्रतियोगिता की तैयारी यहाँ से शुरू करो।</p>
- </div>
- <div class="grid">
-  <div class="game-card" onclick="competitionPrompt('Olympiad')">
-   <div class="emoji">🥇</div><h3>Olympiad</h3>
-   <p class="muted">Maths, Science और GK Olympiad अभ्यास।</p>
-  </div>
-  <div class="game-card" onclick="competitionPrompt('General Knowledge')">
-   <div class="emoji">🌍</div><h3>General Knowledge</h3>
-   <p class="muted">सामान्य ज्ञान की तैयारी।</p>
-  </div>
-  <div class="game-card" onclick="competitionPrompt('Reasoning')">
-   <div class="emoji">🧠</div><h3>Reasoning</h3>
-   <p class="muted">तर्कशक्ति और मानसिक योग्यता।</p>
-  </div>
-  <div class="game-card" onclick="competitionPrompt('Scholarship Exams')">
-   <div class="emoji">🎓</div><h3>Scholarship Exams</h3>
-   <p class="muted">छात्रवृत्ति परीक्षा की तैयारी।</p>
-  </div>
- </div>
- <div class="card">
-  <h3>🤖 AI से प्रतियोगिता प्रश्न बनवाओ</h3>
-  <p class="muted">किसी प्रतियोगिता का नाम चुनकर AI से अभ्यास प्रश्न बनवा सकते हो।</p>
-  <button class="btn primary" onclick="competitionPrompt('10 महत्वपूर्ण GK और Reasoning प्रश्न उत्तर सहित')">प्रश्न तैयार करो →</button>
- </div>
+<section class="panel">
+<h2>🏆 Competition Zone</h2>
+<div class="grid">
+<div class="tile" onclick="ask('मेरे लिए ओलंपियाड की तैयारी का प्लान बनाओ')">🏅 Olympiad</div>
+<div class="tile" onclick="ask('मेरे लिए सामान्य ज्ञान प्रतियोगिता के प्रश्न बनाओ')">🧠 GK Competition</div>
+<div class="tile" onclick="ask('मेरे लिए विज्ञान प्रतियोगिता के प्रश्न बनाओ')">🔬 Science Competition</div>
+</div>
 </section>
 
-<!-- ABOUT -->
-<section class="page" id="about">
- <div class="card">
-  <h2>✨ SAKSHAR AI के बारे में</h2>
-  <p class="muted">SAKSHAR AI एक Smart Learning Platform है। इसका उद्देश्य बच्चों और विद्यार्थियों को आसान तरीके से पढ़ने और सीखने में मदद करना है।</p>
-  <h3>हमारी सुविधाएँ</h3>
-  <p>🤖 AI Teacher – सवाल-जवाब</p>
-  <p>📚 Study Library – Notes और PDFs</p>
-  <p>🎮 Learning Games – Quiz और Maths</p>
-  <p>🏆 Competition – प्रतियोगिता अभ्यास</p>
-  <p>📄 Previous Papers – पुराने प्रश्नपत्र</p>
-  <hr style="border-color:#293b64">
-  <p class="muted">Created with ❤️ by Sakshar Jaiswal</p>
- </div>
-</section>
+<footer>
+SAKSHAR AI © 2026<br>
+Created with ❤️ by Sakshar Jaiswal
+</footer>
 </main>
 
-<footer>© 2026 SAKSHAR AI · Learn • Play • Grow 🌟</footer>
-
 <script>
-// YOUR CLOUDFLARE BACKEND
 const API_URL="https://sakshar-ai-api.jtechnicalshort.workers.dev/";
-
-// POINTS
-let points=Number(localStorage.getItem("saksharPoints")||0);
-document.getElementById("points").textContent=points;
-
-function addPoints(n){
- points+=n;
- localStorage.setItem("saksharPoints",points);
- document.getElementById("points").textContent=points;
-}
-
-// NAVIGATION
-function showPage(page){
- document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
- document.getElementById(page).classList.add("active");
- document.querySelectorAll("nav button").forEach(b=>{
-  b.classList.toggle("active",b.dataset.page===page);
- });
- window.scrollTo({top:0,behavior:"smooth"});
-}
-document.querySelectorAll("nav button").forEach(b=>{
- b.onclick=()=>showPage(b.dataset.page);
-});
-
-// AI CHAT
-let messages=[{
- role:"system",
- content:"You are SAKSHAR AI, a friendly educational assistant for students from school to graduation. Reply in the student's language. Explain concepts simply, accurately and step by step. Help with notes, question answers, quizzes, exams and competitions. Never invent facts or claim a PDF is attached when it is not."
-}];
+let history=[];
 
 function addMessage(text,type){
- const box=document.getElementById("chatBox");
+ const chat=document.getElementById("chat");
  const div=document.createElement("div");
  div.className="msg "+type;
  div.textContent=text;
- box.appendChild(div);
- box.scrollTop=box.scrollHeight;
- return div;
+ chat.appendChild(div);
+ chat.scrollTop=chat.scrollHeight;
 }
 
 async function sendMessage(){
- const input=document.getElementById("chatInput");
- const btn=document.getElementById("sendBtn");
- const text=input.value.trim();
- if(!text||btn.disabled)return;
-
- addMessage(text,"user");
- input.value="";
- messages.push({role:"user",content:text});
- btn.disabled=true;
- btn.textContent="रुको...";
- const loading=addMessage("🤔 जवाब तैयार हो रहा है...","ai");
-
+ const box=document.getElementById("question");
+ const q=box.value.trim();
+ if(!q)return;
+ box.value="";
+ addMessage(q,"user");
+ history.push({role:"user",content:"मैं "+document.getElementById("class").value+" में पढ़ता/पढ़ती हूँ। "+q});
+ const loading=document.createElement("div");
+ loading.className="msg bot";
+ loading.textContent="SAKSHAR AI जवाब तैयार कर रहा है...";
+ document.getElementById("chat").appendChild(loading);
  try{
   const response=await fetch(API_URL,{
    method:"POST",
    headers:{"Content-Type":"application/json"},
-   body:JSON.stringify({messages:messages})
+   body:JSON.stringify({messages:history})
   });
-
-  const raw=await response.text();
-  let data;
-  try{data=JSON.parse(raw)}catch(e){
-   throw new Error("Backend ने JSON जवाब नहीं दिया। Worker को जाँचें।");
-  }
-
-  if(!response.ok){
-   throw new Error(data.error||data.message||"Server Error: "+response.status);
-  }
-
-  const reply=data.choices?.[0]?.message?.content||
-              data.reply||data.response||data.answer;
-
-  if(!reply)throw new Error("AI का जवाब नहीं मिला। Worker का Response Format जाँचें।");
-
-  loading.textContent=reply;
-  messages.push({role:"assistant",content:reply});
-  if(messages.length>21)messages=[messages[0],...messages.slice(-20)];
-
-  document.getElementById("connection").textContent="● AI Backend से जवाब मिल रहा है";
- }catch(error){
-  loading.textContent="❌ AI Connection में समस्या:\n"+error.message+
-  "\n\nCloudflare Worker, API Key और API URL जाँचें।";
-  messages.pop();
-  document.getElementById("connection").textContent="● AI Connection में समस्या";
- }finally{
-  btn.disabled=false;
-  btn.textContent="भेजें ➤";
+  const data=await response.json();
+  if(!response.ok)throw new Error(data.error||"Server error");
+  const answer=data.choices?.[0]?.message?.content||data.reply||"जवाब नहीं मिला।";
+  loading.textContent=answer;
+  history.push({role:"assistant",content:answer});
+ }catch(e){
+  loading.textContent="कनेक्शन में समस्या है। Worker URL और API सेटिंग जाँचें।";
  }
 }
 
-document.getElementById("chatInput").addEventListener("keydown",e=>{
- if(e.key==="Enter")sendMessage();
-});
-
-function clearChat(){
- messages=[messages[0]];
- document.getElementById("chatBox").innerHTML=
- '<div class="msg ai">नमस्ते! 😊 नई चैट शुरू करते हैं।</div>';
+function ask(q){
+ document.getElementById("question").value=q;
+ sendMessage();
 }
 
-// CLASS OPTIONS
-const classes=[
- "Nursery","LKG","UKG",
- ...Array.from({length:12},(_,i)=>"Class "+(i+1)),
- "Graduation","Post Graduation"
-];
-const classSelect=document.getElementById("classSelect");
-classes.forEach(c=>{
- const option=document.createElement("option");
- option.value=c;option.textContent=c;
- classSelect.appendChild(option);
-});
-
-// STUDY LIBRARY
-// यहाँ असली PDF और सामग्री के लिंक जोड़े जाएँगे।
-const resources=[
- // Example:
- // {title:"Class 8 Science Notes",className:"Class 8",
- // subject:"Science",type:"notes",url:"YOUR_PDF_LINK"}
-];
-
-function filterLibrary(){
- const cls=classSelect.value;
- const subject=document.getElementById("subjectSelect").value;
- const type=document.getElementById("typeSelect").value;
- const search=document.getElementById("librarySearch").value.toLowerCase();
-
- const results=resources.filter(r=>
-  r.className===cls&&
-  (subject==="all"||r.subject===subject)&&
-  (type==="all"||r.type===type)&&
-  r.title.toLowerCase().includes(search)
- );
-
- const area=document.getElementById("libraryResults");
- area.innerHTML="";
-
- if(!results.length){
-  area.innerHTML='<div class="card"><h3>📂 अभी सामग्री उपलब्ध नहीं है</h3><p class="muted">इस कक्षा और विषय के लिए PDF या Notes अभी अपलोड नहीं किए गए हैं। बाद में सामग्री जोड़ी जा सकती है।</p></div>';
-  return;
- }
-
- results.forEach(r=>{
-  const card=document.createElement("div");
-  card.className="resource";
-  const title=document.createElement("h3");
-  title.textContent=r.title;
-  const info=document.createElement("p");
-  info.className="muted";
-  info.textContent=r.className+" • "+r.subject+" • "+r.type;
-  card.append(title,info);
-  if(r.url){
-   const link=document.createElement("a");
-   link.href=r.url;link.target="_blank";
-   link.rel="noopener noreferrer";
-   link.textContent="📄 PDF खोलें";
-   card.appendChild(link);
-  }
-  area.appendChild(card);
- });
-}
-filterLibrary();
-
-// COMPETITION
-function competitionPrompt(topic){
- showPage("chat");
- document.getElementById("chatInput").value=
- "मुझे "+topic+" की तैयारी करवाओ। मेरे लिए 10 महत्वपूर्ण प्रश्न उत्तर और MCQ क्विज बनाओ। आसान भाषा में समझाओ।";
-}
-
-// GAMES
-const quizzes=[
- {q:"भारत की राजधानी क्या है?",o:["मुंबई","नई दिल्ली","लखनऊ","जयपुर"],a:1},
- {q:"भारत का राष्ट्रीय पशु कौन है?",o:["शेर","हाथी","बाघ","घोड़ा"],a:2},
- {q:"सौरमंडल का सबसे बड़ा ग्रह कौन है?",o:["पृथ्वी","मंगल","बृहस्पति","शुक्र"],a:2},
- {q:"भारत का संविधान कब लागू हुआ?",o:["15 अगस्त 1947","26 जनवरी 1950","2 अक्टूबर 1950","26 नवंबर 1949"],a:1},
- {q:"पौधे भोजन किस प्रक्रिया से बनाते हैं?",o:["श्वसन","प्रकाश संश्लेषण","वाष्पीकरण","पाचन"],a:1},
- {q:"ताजमहल कहाँ है?",o:["दिल्ली","आगरा","जयपुर","लखनऊ"],a:1}
-];
-const riddles=[
- {q:"पानी पीते ही कौन मर जाती है?",a:["आग"]},
- {q:"दाँत हैं लेकिन काट नहीं सकती?",a:["कंघी"]},
- {q:"जो हमेशा आगे बढ़ता है और वापस नहीं आता?",a:["समय","वक्त"]}
-];
-const words=[
- {w:"KITAAB",a:"किताब"},{w:"SCHOOL",a:"स्कूल"},
- {w:"BHARAT",a:"भारत"},{w:"PENCIL",a:"पेंसिल"},
- {w:"GARDEN",a:"बगीचा"}
-];
-let gameType="",questionIndex=0,score=0;
-
-function backGames(){
- document.getElementById("gameArea").classList.add("hidden");
- document.getElementById("gameMenu").classList.remove("hidden");
-}
+let gameAnswer=0;
 function startGame(type){
- gameType=type;questionIndex=0;score=0;
- document.getElementById("gameMenu").classList.add("hidden");
- document.getElementById("gameArea").classList.remove("hidden");
- showPage("games");nextQuestion();
+ const area=document.getElementById("game");
+ if(type==="math"){
+  let a=Math.floor(Math.random()*20)+1;
+  let b=Math.floor(Math.random()*20)+1;
+  gameAnswer=a+b;
+  area.innerHTML=`<h3>➕ ${a} + ${b} = ?</h3>
+  <input id="gameInput" type="number" placeholder="उत्तर लिखें">
+  <button onclick="checkGame()">जवाब जाँचें</button><p id="result"></p>`;
+ }else if(type==="gk"){
+  gameAnswer="नई दिल्ली";
+  area.innerHTML=`<h3>भारत की राजधानी क्या है?</h3>
+  <button onclick="checkGK('नई दिल्ली')">नई दिल्ली</button>
+  <button onclick="checkGK('मुंबई')">मुंबई</button>
+  <p id="result"></p>`;
+ }else{
+  gameAnswer="कमल";
+  area.innerHTML=`<h3>भारत का राष्ट्रीय फूल कौन सा है?</h3>
+  <button onclick="checkGK('कमल')">कमल</button>
+  <button onclick="checkGK('गुलाब')">गुलाब</button>
+  <p id="result"></p>`;
+ }
 }
-function finishGame(total){
- addPoints(score*10);
- document.getElementById("gameContent").innerHTML=
- '<h2>🏆 शाबाश! गेम पूरा हुआ</h2>'+
- '<h3>स्कोर: '+score+' / '+total+'</h3>'+
- '<p class="muted">तुमने '+score*10+' Points कमाए!</p>'+
- '<button class="btn primary" onclick="startGame(\''+gameType+'\')">फिर खेलो</button>'+
- '<button class="btn" onclick="backGames()">दूसरा गेम</button>';
+function checkGame(){
+ const value=Number(document.getElementById("gameInput").value);
+ document.getElementById("result").textContent=
+ value===gameAnswer?"🎉 बिल्कुल सही!":"❌ फिर से कोशिश करो!";
 }
-function nextQuestion(){
- if(questionIndex>=5){finishGame(5);return;}
- if(gameType==="quiz")quizQuestion();
- if(gameType==="math")mathQuestion();
- if(gameType==="word")wordQuestion();
- if(gameType==="riddle")riddleQuestion();
+function checkGK(value){
+ document.getElementById("result").textContent=
+ value===gameAnswer?"🎉 शाबाश! सही जवाब!":"❌ गलत जवाब, फिर कोशिश करो।";
 }
-function quizQuestion(){
- const item=quizzes[(questionIndex*2)%quizzes.length];
- renderOptions("🧠 GK Quiz",item.q,item.o,item.a);
-}
-function renderOptions(title,q,options,answer){
- const area=document.getElementById("gameContent");
- area.innerHTML='<h2>'+title+'</h2><p class="small">सवाल '+(questionIndex+1)+' / 5</p><div class="question"></div><div id="options"></div><p id="feedback"></p>';
- area.querySelector(".question").textContent=q;
- const holder=document.getElementById("options");
- options.forEach((option,i)=>{
-  const b=document.createElement("button");
-  b.className="option";b.textContent=option;
-  b.onclick=()=>{
-   if(holder.dataset.done)return;
-   holder.dataset.done="yes";
-   if(i===answer){b.classList.add("correct");score++;}
-   else{b.classList.add("wrong");holder.children[answer].classList.add("correct");}
-   document.getElementById("feedback").textContent=
-    i===answer?"✅ बिल्कुल सही!":"❌ सही जवाब: "+options[answer];
-   [...holder.querySelectorAll("button.option")].forEach(x=>x.disabled=true);
-   const next=document.createElement("button");
-   next.className="btn primary";
-   next.textContent=questionIndex===4?"परिणाम देखो":"अगला सवाल →";
-   next.onclick=()=>{questionIndex++;nextQuestion();};
-   holder.appendChild(next);
-  };
-  holder.appendChild(b);
- });
-}
-function mathQuestion(){
- const a=Math.floor(Math.random()*20)+5;
- const b=Math.floor(Math.random()*15)+2;
- const op=["+","-","×"][Math.floor(Math.random()*3)];
- const answer=op==="+"?a+b:op==="-"?a-b:a*b;
- const area=document.getElementById("gameContent");
- area.innerHTML='<h2>➗ Math Challenge</h2><p>सवाल '+(questionIndex+1)+' / 5</p><h2>'+a+' '+op+' '+b+' = ?</h2><input id="mathAnswer" type="number" placeholder="जवाब लिखो"><p id="feedback"></p><button class="btn primary" id="check">जवाब जाँचें</button>';
- document.getElementById("check").onclick=()=>{
-  const v=document.getElementById("mathAnswer").value;
-  if(v==="")return;
-  const correct=Number(v)===answer;
-  if(correct)score++;
-  document.getElementById("feedback").textContent=correct?"✅ सही जवाब!":"❌ सही जवाब: "+answer;
-  document.getElementById("check").onclick=()=>{questionIndex++;nextQuestion();};
-  document.getElementById("check").textContent=questionIndex===4?"परिणाम":"अगला सवाल";
- };
-}
-function riddleQuestion(){
- const item=riddles[questionIndex%riddles.length];
- const area=document.getElementById("gameContent");
- area.innerHTML='<h2>🧩 पहेली</h2><p>'+item.q+'</p><input id="answer" placeholder="जवाब लिखो"><p id="feedback"></p><button class="btn primary" id="check">जवाब जाँचें</button>';
- document.getElementById("check").onclick=()=>{
-  const v=document.getElementById("answer").value.trim().toLowerCase();
-  if(!v)return;
-  const correct=item.a.some(x=>x===v);
-  if(correct)score++;
-  document.getElementById("feedback").textContent=correct?"🎉 सही जवाब!":"सही जवाब: "+item.a[0];
-  document.getElementById("check").oncli
+</script>
+</body>
+</html>
