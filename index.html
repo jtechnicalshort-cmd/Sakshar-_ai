@@ -8,10 +8,11 @@
 <style>
 *{box-sizing:border-box}
 body{margin:0;font-family:Arial,sans-serif;background:#0b1020;color:white}
-header{padding:18px;background:#121a32;display:flex;justify-content:space-between;align-items:center}
+header{padding:18px;background:#121a32;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap}
 .logo{font-size:23px;font-weight:bold;color:#55d6ff}
 button,select{padding:12px;border:0;border-radius:10px;cursor:pointer}
 button{background:#3978ff;color:white;font-weight:bold}
+button:disabled{opacity:.6;cursor:wait}
 main{max-width:1000px;margin:auto;padding:18px}
 .hero{text-align:center;padding:35px 10px}
 .hero h1{font-size:35px;color:#65d8ff}
@@ -58,11 +59,9 @@ footer{text-align:center;padding:25px;color:#9eacc8}
 <section class="panel">
 <h2>🤖 SAKSHAR AI Tutor</h2>
 <p class="small">अपना सवाल पूछो और AI से पढ़ाई में मदद लो।</p>
-
 <div id="chat">
 <div class="msg bot">नमस्ते! मैं SAKSHAR AI हूँ। 😊 आज क्या पढ़ना चाहते हो?</div>
 </div>
-
 <textarea id="question" rows="3" placeholder="अपना सवाल यहाँ लिखें..."></textarea>
 <button id="sendButton" onclick="sendMessage()">सवाल भेजें ➤</button>
 </section>
@@ -145,7 +144,7 @@ async function sendMessage() {
     const response = await fetch(API_URL, {
       method: "POST",
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "text/plain;charset=UTF-8"
       },
       body: JSON.stringify({ messages: history })
     });
@@ -162,7 +161,7 @@ async function sendMessage() {
     let data;
     try {
       data = JSON.parse(raw);
-    } catch (parseError) {
+    } catch (e) {
       throw new Error("Worker का जवाब JSON नहीं है। HTTP Status: " + response.status);
     }
 
@@ -177,6 +176,7 @@ async function sendMessage() {
     }
 
     loading.textContent = answer;
+
     history.push({
       role: "assistant",
       content: answer
